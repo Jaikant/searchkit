@@ -71,10 +71,10 @@
     "lodash": "4.14.2",
     "qs": "6.4.0",
     "rc-slider": "5.4.3",
-    "react-addons-update": "^15.4.0"
+    "react-addons-update": "^15.4.2"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0-0"
+    "react": "^0.14.0 || ^15.4.2"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.40",
@@ -112,9 +112,9 @@
     "phantomjs-prebuilt": "^2.1.4",
     "postcss-loader": "^0.8.2",
     "protractor": "^4.0.0",
-    "react": "^15.4.0",
-    "react-addons-test-utils": "^15.4.0",
-    "react-dom": "15.4.0",
+    "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-dom": "15.4.2",
     "react-router": "^2.4.0",
     "sass-loader": "^3.1.2",
     "serve-favicon": "^2.3.0",
