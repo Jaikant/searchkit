@@ -95,6 +95,14 @@ export class Toggle extends AbstractItemList {
     }, AbstractItemList.defaultProps)
 }
 
+export class ToggleFilter extends AbstractItemList {
+    static defaultProps = defaults({
+        itemComponent: ItemComponent,
+        mod: 'sk-togglefilter',
+        showCount: false,
+    }, AbstractItemList.defaultProps)
+}
+
 export class Tabs extends AbstractItemList {
     static defaultProps = defaults({
         itemComponent: ItemComponent,

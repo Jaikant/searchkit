@@ -64,13 +64,23 @@ export class SearchkitManager {
   }
 
   constructor(host:string, options:SearchkitOptions = {}){
-    this.options = defaults(options, {
-      useHistory:true,
-      httpHeaders:{},
-      searchOnLoad:true,
-      createHistory:createHistoryInstance,
-      getLocation:()=> window.location
-    })
+    if (typeof window !== 'undefined') {
+      this.options = defaults(options, {
+        useHistory:true,
+        httpHeaders:{},
+        searchOnLoad:true,
+        createHistory:createHistoryInstance,
+        getLocation:()=> window.location
+      })
+    } else {
+      this.options = defaults(options, {
+        useHistory:false,
+        httpHeaders:{},
+        searchOnLoad:false,
+        //createHistory:createHistoryInstance,
+        //getLocation:()=> window.location
+      })
+    }
     this.host = host
 
     this.transport = this.options.transport || new AxiosESTransport(host, {
@@ -98,7 +108,10 @@ export class SearchkitManager {
       this.history = this.options.createHistory()
       this.listenToHistory()
     }
-    this.runInitialSearch()
+    //Or maybe we can move this up - but then what is the purpose of useHistory outside of SSR.
+    if (typeof window !== 'undefined') {
+       this.runInitialSearch()
+    }
   }
   addAccessor(accessor){
     accessor.setSearchkitManager(this)

@@ -4,7 +4,7 @@ import {fastClick, hasClass, jsxToHTML, printPrettyHtml} from "../../../__test__
 import {FacetFilter} from "./FacetFilter"
 import {RefinementListFilter} from "./RefinementListFilter"
 import {SearchkitManager, Utils, FieldOptions} from "../../../../core"
-import {Toggle, ItemComponent} from "../../../ui"
+import {Toggle, ToggleFilter, ItemComponent} from "../../../ui"
 const bem = require("bem-cn")
 import * as _ from "lodash"
 import * as sinon from "sinon"
@@ -174,7 +174,7 @@ describe("Facet Filter tests", () => {
     this.createWrapper(
       <RefinementListFilter
         containerComponent={container}
-        listComponent={Toggle}
+        listComponent={ToggleFilter}
         itemComponent={(props)=> <ItemComponent {...props} showCount={true}/>}
         field="test" id="test id" title="test title"
         bucketsTransform={(buckets)=> _.reverse(buckets)}

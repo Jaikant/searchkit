@@ -37,8 +37,10 @@ body {
   &__filters {
     background:$sk-layout-panel-background;
     padding:15px;
-    margin:15px 0 15px 15px;
+    margin:15px 0 60px 15px;
     flex:0 0 246px;
+    opacity: 0.7;
+    border-radius: 5px;
     box-shadow: 0 1px 3px 0 rgba(0,0,0,0.08);
 
     .sk-refinement-list,
@@ -209,6 +211,11 @@ body {
   width:300px;
   margin:10px auto;
 
+  @media screen and (max-width: $sk-breakpoint-tablet) {
+    width:80%;
+  }
+
+
   &.is-numbered {
     width:600px;
   }
@@ -352,7 +359,7 @@ body {
 
 .sk-action-bar {
 
-  .sk-select, .sk-toggle {
+  .sk-select, .sk-toggle, .sk-togglefilter {
     margin-left:15px;
   }
 }

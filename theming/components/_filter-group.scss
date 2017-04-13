@@ -47,8 +47,9 @@
 
 .sk-action-bar {
   .sk-filter-groups {
-    display: flex;
-    flex-flow: row;
+    //display: flex;
+    //flex-flow: row;
+    //This change was to make the selected filters inline while displaying on mobile.
     margin: 0 10px 10px 0;
     color: $sk-action-text-color;
   }

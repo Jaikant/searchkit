@@ -2,6 +2,8 @@
 
 .sk-range-slider {
   padding-bottom: 16px; // Take into account marks
+  padding-right: 10px; // Take into account marks
+  padding-left: 10px; // Take into account marks
 
   .rc-slider-handle {
     border-color: $sk-border-color;
