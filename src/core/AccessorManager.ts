@@ -46,11 +46,7 @@ export class AccessorManager {
   add(accessor){
     if(accessor instanceof StatefulAccessor){
       if(accessor instanceof BaseQueryAccessor && accessor.key == "q"){
-        if(this.queryAccessor !== noopQueryAccessor){
-          throw new Error("Only a single instance of BaseQueryAccessor is allowed")
-        } else {
           this.queryAccessor = accessor
-        }
       }
       let existingAccessor = this.statefulAccessors[accessor.key]
       if(existingAccessor){
