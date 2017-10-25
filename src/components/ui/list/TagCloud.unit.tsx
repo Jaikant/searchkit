@@ -1,11 +1,10 @@
 import * as React from "react";
 import {mount} from "enzyme";
-let bemBlock = require("bem-cn")
 
 import { TagCloud } from "./TagCloud"
 import { MockList } from "./MockList"
 
-import {fastClick, hasClass, jsxToHTML, printPrettyHtml} from "../../__test__/TestHelpers"
+import {fastClick} from "../../__test__/TestHelpers"
 
 describe("TagCloud", ()=> {
 
@@ -14,22 +13,7 @@ describe("TagCloud", ()=> {
     this.wrapper = mount(
       <MockList listComponent={TagCloud}/>
     )
-    expect(this.wrapper.html()).toEqual(jsxToHTML(
-      <div className="sk-tag-cloud">
-        <div className="sk-tag-cloud-option sk-tag-cloud__item is-active" data-qa="option" data-key="a" style={{fontSize:" 1em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">A translated</div>
-        </div>
-        <div className="sk-tag-cloud-option sk-tag-cloud__item is-disabled" data-qa="option" data-key="b" style={{fontSize:" 1.1em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">B translated</div>
-        </div>
-        <div className="sk-tag-cloud-option sk-tag-cloud__item is-active" data-qa="option" data-key="c" style={{fontSize:" 1.2em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">C translated</div>
-        </div>
-        <div className="sk-tag-cloud-option sk-tag-cloud__item" data-qa="option" data-key="d" style={{fontSize:" 1.5em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">d translated</div>
-        </div>
-      </div>
-    ))
+    expect(this.wrapper).toMatchSnapshot()   
 
     this.wrapper.setProps({disabled:true})
     expect(this.wrapper.find(".sk-tag-cloud").hasClass("is-disabled")).toBe(true)
@@ -50,22 +34,7 @@ describe("TagCloud", ()=> {
     this.wrapper = mount(
       <MockList listComponent={TagCloud} items={items}/>
     )
-    expect(this.wrapper.html()).toEqual(jsxToHTML(
-      <div className="sk-tag-cloud">
-        <div className="sk-tag-cloud-option sk-tag-cloud__item is-active" data-qa="option" data-key="a" style={{fontSize:" 1em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">a translated</div>
-        </div>
-        <div className="sk-tag-cloud-option sk-tag-cloud__item" data-qa="option" data-key="b" style={{fontSize:" 1.1em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">B translated</div>
-        </div>
-        <div className="sk-tag-cloud-option sk-tag-cloud__item is-active" data-qa="option" data-key="c" style={{fontSize:" 1.2em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">C translated</div>
-        </div>
-        <div className="sk-tag-cloud-option sk-tag-cloud__item" data-qa="option" data-key="d" style={{fontSize:" 1.5em"}}>
-          <div data-qa="label" className="sk-tag-cloud-option__text">d translated</div>
-        </div>
-      </div>
-    ))
+    expect(this.wrapper).toMatchSnapshot()
   })
 
   it("mod + classname can be updated", () => {

@@ -1,11 +1,8 @@
-import * as React from "react";
-const Rcslider = require("rc-slider")
+import * as PropTypes from "prop-types";
 
 import {
-	SearchkitManager,
 	SearchkitComponent,
-	SearchkitComponentProps,
-	FastClick,
+	SearchkitComponentProps,	
 	RangeAccessor,
 	RenderComponentType,
 	RenderComponentPropType,
@@ -14,13 +11,12 @@ import {
 } from "../../../../../core"
 
 import {
-	RangeProps, Panel, RangeComponentBuilder,
+	RangeProps, Panel,
 	RangeSliderHistogram, RangeSlider
 } from "../../../../ui"
 
-import {defaults} from "lodash"
-import {map} from "lodash"
-import {get} from "lodash"
+const defaults = require("lodash/defaults")
+const get = require("lodash/get")
 
 export interface RangeFilterProps extends SearchkitComponentProps {
 	field:string
@@ -43,17 +39,17 @@ export class RangeFilter extends SearchkitComponent<RangeFilterProps, any> {
 	accessor:RangeAccessor
 
 	static propTypes = defaults({
-		field:React.PropTypes.string.isRequired,
-		title:React.PropTypes.string.isRequired,
-		id:React.PropTypes.string.isRequired,
+		field:PropTypes.string.isRequired,
+		title:PropTypes.string.isRequired,
+		id:PropTypes.string.isRequired,
 		containerComponent:RenderComponentPropType,
 		rangeComponent:RenderComponentPropType,
-		fieldOptions:React.PropTypes.shape({
-			type:React.PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
-			options:React.PropTypes.object
+		fieldOptions:PropTypes.shape({
+			type:PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
+			options:PropTypes.object
 		}),
-		rangeFormatter:React.PropTypes.func,
-		marks:React.PropTypes.object
+		rangeFormatter:PropTypes.func,
+		marks:PropTypes.object
 	}, SearchkitComponent.propTypes)
 
 
@@ -72,9 +68,9 @@ export class RangeFilter extends SearchkitComponent<RangeFilterProps, any> {
 
 	defineAccessor() {
 		const { id, title, min, max, field, fieldOptions,
-			interval, showHistogram } = this.props
+			interval, showHistogram, rangeFormatter, translations } = this.props
 		return new RangeAccessor(id,{
-			id, min, max, title, field,
+			id, min, max, title, field, rangeFormatter, translations,
 			interval, loadHistogram:showHistogram, fieldOptions
 		})
 	}

@@ -1,4 +1,5 @@
 import * as React from "react"
+import * as PropTypes from "prop-types"
 
 import {
 	SearchkitComponent,
@@ -7,17 +8,18 @@ import {
 	SearchkitComponentProps
 } from "../../../../../core"
 
-import {defaults} from "lodash"
-import {map} from "lodash"
-import {identity} from "lodash"
+const defaults = require("lodash/defaults")
+const map = require("lodash/map")
+const identity = require("lodash/identity")
 
 export interface HierarchicalRefinementFilterProps extends SearchkitComponentProps {
 	field:string
 	id:string
 	title:string
+	size?:number
   orderKey?:string
   orderDirection?:string
-  startLevel?:number,
+  startLevel?:number
 	countFormatter?:(count:number)=> number | string
 }
 
@@ -29,13 +31,13 @@ export class HierarchicalRefinementFilter extends SearchkitComponent<Hierarchica
 	}
 
 	static propTypes = defaults({
-		field:React.PropTypes.string.isRequired,
-		id:React.PropTypes.string.isRequired,
-		title:React.PropTypes.string.isRequired,
-		orderKey:React.PropTypes.string,
-		orderDirection:React.PropTypes.oneOf(["asc", "desc"]),
-		startLevel:React.PropTypes.number,
-		countFormatter:React.PropTypes.func
+		field:PropTypes.string.isRequired,
+		id:PropTypes.string.isRequired,
+		title:PropTypes.string.isRequired,
+		orderKey:PropTypes.string,
+		orderDirection:PropTypes.oneOf(["asc", "desc"]),
+		startLevel:PropTypes.number,
+		countFormatter:PropTypes.func
 	}, SearchkitComponent.propTypes)
 
 	defineBEMBlocks() {
@@ -47,10 +49,24 @@ export class HierarchicalRefinementFilter extends SearchkitComponent<Hierarchica
 	}
 
 	defineAccessor() {
-		const {field, id, title, orderKey, orderDirection, startLevel} = this.props
+		const {
+			field,
+			id,
+			title,
+			size,
+			orderKey,
+			orderDirection,
+			startLevel } = this.props;
+
 		return new NestedFacetAccessor(id, {
-			field, id, title, orderKey, orderDirection, startLevel
-		})
+			field,
+			id,
+			title,
+			size,
+			orderKey,
+			orderDirection,
+			startLevel
+		});
 	}
 
 	addFilter(level, option) {

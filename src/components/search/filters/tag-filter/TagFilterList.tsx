@@ -1,9 +1,7 @@
 import * as React from "react"
 
 import {
-  SearchkitComponent,
-  SearchkitComponentProps,
-  FastClick,
+  SearchkitComponentProps
 } from "../../../../core"
 
 import { TagFilter } from "./TagFilter"
@@ -14,7 +12,7 @@ export interface TagFilterListProps extends SearchkitComponentProps {
   children?: React.ReactChildren
 }
 
-import {map} from "lodash"
+const map = require("lodash/map")
 
 export class TagFilterList extends React.Component<TagFilterListProps, any> {
 

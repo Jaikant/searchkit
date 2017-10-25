@@ -1,10 +1,8 @@
 import * as React from "react";
 
 import {
-  FastClick,
-  ReactComponentType,
-  PureRender
-} from "../../../"
+  FastClick
+} from "../../../core/react/FastClick"
 
 import { ItemProps } from './ListProps'
 
@@ -33,8 +31,7 @@ function itemRenderer(props: ItemComponentProps) {
   )
 }
 
-@PureRender
-export class ItemComponent extends React.Component<ItemComponentProps, any>{
+export class ItemComponent extends React.PureComponent<ItemComponentProps, any>{
 
   static defaultProps = {
     showCount: true,
@@ -46,8 +43,7 @@ export class ItemComponent extends React.Component<ItemComponentProps, any>{
   }
 }
 
-@PureRender
-export class CheckboxItemComponent extends React.Component<ItemComponentProps, any>{
+export class CheckboxItemComponent extends React.PureComponent<ItemComponentProps, any>{
 
   static defaultProps = {
     showCount: true,

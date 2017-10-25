@@ -1,17 +1,15 @@
 import * as React from "react";
 import {mount} from "enzyme";
 import {SearchBox} from "./SearchBox";
-import {SearchkitManager, QueryString } from "../../../core";
-const bem = require("bem-cn");
+import {SearchkitManager, QueryString, QueryAccessor } from "../../../core"
 import {
-  fastClick, hasClass, jsxToHTML, printPrettyHtml
+  fastClick, hasClass, printPrettyHtml
 } from "../../__test__/TestHelpers"
-import {
-  throttle
-} from 'lodash'
+
+const throttle = require('lodash/throttle')
 
 
-import {omit} from "lodash"
+const omit = require("lodash/omit")
 
 describe("Searchbox tests", () => {
 
@@ -22,6 +20,7 @@ describe("Searchbox tests", () => {
     this.searchkit.translateFunction = (key)=> {
       return {
         "searchbox.placeholder":"search movies",
+        "searchbox.button":"Go"
       }[key]
     }
 
@@ -35,7 +34,7 @@ describe("Searchbox tests", () => {
           {...options}
         />
       );
-      this.accessor = this.searchkit.accessors.getAccessors()[0]
+      this.accessor = this.searchkit.getAccessorByType(QueryAccessor)
     }
 
     this.typeSearch = (value)=> {
@@ -48,6 +47,7 @@ describe("Searchbox tests", () => {
   it("render", () => {
     this.createWrapper()
     expect(this.wrapper.find(".sk-search-box__text").get(0).placeholder).toBe("search movies")
+    expect(this.wrapper.find(".sk-search-box__action").get(0).value).toEqual("Go")
   })
 
   it("search on change", () => {

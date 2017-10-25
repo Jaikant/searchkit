@@ -10,7 +10,7 @@ import * as ReactDOM from "react-dom"
 import * as React from "react"
 import {Router, Route, browserHistory, Link, IndexRoute} from 'react-router'
 
-import * as _ from "lodash"
+
 
 import "../../../../../theming/theme.scss"
 import "./customisations.scss"
@@ -18,7 +18,7 @@ import "./customisations.scss"
 const MovieHitsListItem = (props)=> {
   const {bemBlocks, result} = props
   let url = "http://www.imdb.com/title/" + result._source.imdbId
-  const source:any = _.extend({}, result._source, result.highlight)
+  const source:any = Object.assign({}, result._source, result.highlight)
   return (
     <div className={bemBlocks.item().mix(bemBlocks.container("item"))} data-qa="hit">
       <div className={bemBlocks.item("poster")}>
@@ -55,13 +55,12 @@ class App extends React.Component<any, any> {
 
             <div className="sk-layout__filters">
               <div className="sk-layout__filters-row">
-                <MenuFilter translations={{"All":"All options"}} field={"type.raw"} title="ItemList" id="item-list" listComponent={ItemList} />
-                <MenuFilter field={"type.raw"} title="CheckboxItemList" id="checkbox-item-list" listComponent={CheckboxItemList} />
-                <MenuFilter field={"type.raw"} title="ItemHistogramList" id="histogram-list" listComponent={ItemHistogramList} />
-                <MenuFilter field={"type.raw"} title="TagCloud" id="tag-cloud" listComponent={TagCloud} />
-                <MenuFilter field={"type.raw"} title="Toggle" id="toggle" listComponent={Toggle} />
-                <MenuFilter field={"type.raw"} title="Tabs" id="tabs" listComponent={Tabs} />
-                <MenuFilter countFormatter={(count)=> "#"+count} field={"type.raw"} title="Select" id="select" listComponent={Select} />
+                <MenuFilter translations={{"All":"All options"}} field={"type.raw"} title="ItemList" id="typeList" listComponent={ItemList} />
+                <MenuFilter field={"type.raw"} title="CheckboxItemList" id="typeList" listComponent={CheckboxItemList} />
+                <MenuFilter field={"type.raw"} title="ItemHistogramList" id="typeList" listComponent={ItemHistogramList} />
+                <MenuFilter field={"type.raw"} title="TagCloud" id="typeList" listComponent={TagCloud} />
+                <MenuFilter field={"type.raw"} title="Tabs" id="typeList" listComponent={Tabs} />
+                <MenuFilter countFormatter={(count)=> "#"+count} field={"type.raw"} title="Select" id="typeList" listComponent={Select} />
 
               </div>
             </div>

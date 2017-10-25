@@ -2,11 +2,12 @@ import * as React from "react";
 
 import { RangeProps } from './RangeProps'
 
-import { identity } from "lodash"
-let Rcslider = require("rc-slider")
+const identity = require("lodash/identity")
+const Slider = require('rc-slider')
+const createSliderWithTooltip = Slider.createSliderWithTooltip
+const Range = createSliderWithTooltip(Slider.Range)
 
-let block = require("bem-cn")
-import { PureRender } from "../../../core/react/pure-render"
+import { block } from "../../../core"
 
 export interface RangeSliderProps extends RangeProps {
   step?: number
@@ -14,8 +15,7 @@ export interface RangeSliderProps extends RangeProps {
   rangeFormatter?:(n: number)=> number | string
 }
 
-@PureRender
-export class RangeSlider extends React.Component<RangeSliderProps, {}> {
+export class RangeSlider extends React.PureComponent<RangeSliderProps, {}> {
 
   static defaultProps = {
     mod: "sk-range-slider",
@@ -41,12 +41,12 @@ export class RangeSlider extends React.Component<RangeSliderProps, {}> {
       min, max, minValue, maxValue } = this.props
 
     const bemBlocks = {
-      container: block(mod)
+      container: block(mod).el
     }
 
     return (
       <div className={bemBlocks.container().mix(className)}>
-        <Rcslider
+        <Range
           min={min}
           max={max}
           marks={marks || {
@@ -58,7 +58,8 @@ export class RangeSlider extends React.Component<RangeSliderProps, {}> {
           step={step}
           value={[minValue, maxValue]}
           onChange={this.onChange}
-          onAfterChange={this.onFinished}/>
+          onAfterChange={this.onFinished}
+          />
       </div>
     )
   }

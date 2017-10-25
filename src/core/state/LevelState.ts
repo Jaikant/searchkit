@@ -1,10 +1,10 @@
 import {State} from "./State"
-import {isArray} from "lodash"
-import {take} from "lodash"
-import {size} from "lodash"
-import {without} from "lodash"
-import {indexOf} from "lodash"
-const update = require("react-addons-update")
+const isArray = require("lodash/isArray")
+const take = require("lodash/take")
+const size = require("lodash/size")
+const without = require("lodash/without")
+const indexOf = require("lodash/indexOf")
+const update = require("immutability-helper")
 
 export class LevelState extends State<Array<any>> {
   value:Array<any>

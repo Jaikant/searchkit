@@ -2,21 +2,18 @@ import * as React from "react";
 
 import { ItemComponent, CheckboxItemComponent } from "./ItemComponents"
 import { ListProps } from "./ListProps"
-import { PureRender } from "../../../core/react/pure-render"
+import { block } from "../../../core"
 
-let block = require("bem-cn")
-
-import {map} from "lodash"
-import {includes} from "lodash"
-import {defaults} from "lodash"
-import {identity} from "lodash"
+const map = require("lodash/map")
+const includes = require("lodash/includes")
+const defaults = require("lodash/defaults")
+const identity = require("lodash/identity")
 
 export interface ItemListProps extends ListProps {
   itemComponent?: any
 }
 
-@PureRender
-export class AbstractItemList extends React.Component<ItemListProps, {}> {
+export class AbstractItemList extends React.PureComponent<ItemListProps, {}> {
   static defaultProps: any = {
     mod: "sk-item-list",
     showCount: true,
@@ -39,14 +36,14 @@ export class AbstractItemList extends React.Component<ItemListProps, {}> {
 
   render() {
     const {
-      mod, itemComponent, items, selectedItems = [], translate,
+      mod, itemComponent, items = [], translate,
       toggleItem, setItems, multiselect, countFormatter,
       disabled, showCount, className, docCount
     } = this.props
 
     const bemBlocks = {
-      container: block(mod),
-      option: block(`${mod}-option`)
+      container: block(mod).el,
+      option: block(`${mod}-option`).el
     }
 
     const toggleFunc = multiselect ? toggleItem : (key => setItems([key]))
@@ -74,6 +71,7 @@ export class AbstractItemList extends React.Component<ItemListProps, {}> {
     )
   }
 }
+
 
 export class ItemList extends AbstractItemList {
     static defaultProps = defaults({

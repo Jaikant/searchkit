@@ -1,10 +1,10 @@
 import {State} from "../state"
 import {FilterBasedAccessor} from "./FilterBasedAccessor"
 import {
-  CardinalityMetric, BoolMust, SelectedFilter, FilterBucket
+  BoolMust, FilterBucket
 } from "../query";
 
-import {assign} from 'lodash'
+const assign = require("lodash/assign")
 
 export interface CheckboxFilterAccessorOptions {
   id:string

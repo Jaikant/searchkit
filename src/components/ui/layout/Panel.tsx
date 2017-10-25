@@ -1,6 +1,6 @@
 import * as React from "react";
-let bemBlock = require("bem-cn")
-import {PureRender} from "../../../core"
+import * as PropTypes from "prop-types";
+import {block} from "../../../core"
 export interface PanelProps extends React.Props<Panel> {
   key?: any
   title?: string
@@ -11,16 +11,15 @@ export interface PanelProps extends React.Props<Panel> {
   defaultCollapsed?:boolean
 }
 
-@PureRender
-export class Panel extends React.Component<PanelProps, {collapsed: boolean}> {
+export class Panel extends React.PureComponent<PanelProps, {collapsed: boolean}> {
 
   static propTypes = {
-    title: React.PropTypes.string,
-    disabled: React.PropTypes.bool,
-    mod: React.PropTypes.string,
-    className: React.PropTypes.string,
-    collapsable: React.PropTypes.bool,
-    defaultCollapsed:React.PropTypes.bool
+    title: PropTypes.string,
+    disabled: PropTypes.bool,
+    mod: PropTypes.string,
+    className: PropTypes.string,
+    collapsable: PropTypes.bool,
+    defaultCollapsed:PropTypes.bool
   }
 
   static defaultProps = {
@@ -54,29 +53,24 @@ export class Panel extends React.Component<PanelProps, {collapsed: boolean}> {
   render() {
     const { title, mod, className, disabled, children, collapsable } = this.props
     const collapsed  = collapsable && this.state.collapsed
-    const bemBlocks = {
-      container: bemBlock(mod)
-    }
-    var block = bemBlocks.container
-    var containerClass = block()
-      .mix(className)
+    var containerBlock = block(mod)
       .state({ disabled })
 
     var titleDiv
     if (collapsable){
       titleDiv = (
-        <div className={block("header").state({ collapsable, collapsed })} onClick={this.toggleCollapsed.bind(this)}>
+        <div className={containerBlock.el("header").state({ collapsable, collapsed })} onClick={this.toggleCollapsed.bind(this)}>
           {title}
         </div>
       )
     } else {
-      titleDiv = <div className={block("header") }>{title}</div>
+      titleDiv = <div className={containerBlock.el("header") }>{title}</div>
     }
 
     return (
-      <div className={containerClass}>
+      <div className={containerBlock.mix(className)}>
         {titleDiv}
-        <div className={block("content").state({ collapsed })}>
+        <div className={containerBlock.el("content").state({ collapsed })}>
           {children}
         </div>
       </div>

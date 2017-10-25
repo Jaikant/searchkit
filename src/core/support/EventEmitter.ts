@@ -1,5 +1,5 @@
-import {without} from "lodash"
-import {each} from "lodash"
+const without = require("lodash/without")
+const each = require("lodash/each")
 
 export class EventEmitter {
   listeners = []
@@ -15,5 +15,9 @@ export class EventEmitter {
     each(this.listeners, (fn)=> {
       fn.apply(null, args)
     })
+  }
+
+  clear(){
+    this.listeners = []
   }
 }

@@ -1,10 +1,8 @@
-import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
 	SearchkitComponent,
 	SortingAccessor,
-	FastClick,
-	SortingOptions,
 	SearchkitComponentProps,
 	SortingOption,
 	renderComponent,
@@ -16,8 +14,7 @@ import {
 	Select, ListProps
 } from "../../../ui"
 
-import {defaults} from "lodash"
-import {map} from "lodash"
+const defaults = require("lodash/defaults")
 
 export interface SortingProps extends SearchkitComponentProps {
   options:Array<SortingOption>
@@ -29,12 +26,12 @@ export class SortingSelector extends SearchkitComponent<SortingProps, any> {
 
   static propTypes = defaults({
     listComponent: RenderComponentPropType,
-    options:React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        label:React.PropTypes.string.isRequired,
-        field:React.PropTypes.string,
-        order:React.PropTypes.string,
-        defaultOption:React.PropTypes.bool
+    options:PropTypes.arrayOf(
+      PropTypes.shape({
+        label:PropTypes.string.isRequired,
+        field:PropTypes.string,
+        order:PropTypes.string,
+        defaultOption:PropTypes.bool
       })
     )
   }, SearchkitComponent.propTypes)
@@ -58,7 +55,7 @@ export class SortingSelector extends SearchkitComponent<SortingProps, any> {
 
   render() {
     const { listComponent } = this.props
-		const options = this.accessor.options.options		
+		const options = this.accessor.options.options
     const selected = [this.accessor.getSelectedOption().key]
     const disabled = !this.hasHits()
 

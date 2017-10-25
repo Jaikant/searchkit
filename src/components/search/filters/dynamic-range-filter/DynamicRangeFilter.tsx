@@ -1,11 +1,8 @@
-import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
-	SearchkitManager,
 	SearchkitComponent,
-	SearchkitComponentProps,
-	FastClick,
-	RangeAccessor,
+	SearchkitComponentProps,	
 	RenderComponentType,
 	RenderComponentPropType,
 	renderComponent,
@@ -14,14 +11,13 @@ import {
 } from "../../../../core"
 
 import {
-	RangeProps, Panel, RangeComponentBuilder,
+	RangeProps, Panel,
 	RangeSlider
 } from "../../../ui"
 
-import {defaults} from "lodash"
-import {map} from "lodash"
-import {get} from "lodash"
-import {identity} from "lodash"
+const defaults = require("lodash/defaults")
+const get = require("lodash/get")
+const identity = require("lodash/identity")
 
 export interface DynamicRangeFilterProps extends SearchkitComponentProps {
 	field:string
@@ -30,23 +26,22 @@ export interface DynamicRangeFilterProps extends SearchkitComponentProps {
 	containerComponent?: RenderComponentType<any>
   rangeComponent?: RenderComponentType<RangeProps>
 	rangeFormatter?:(count:number)=> number | string
-	fieldOptions?:FieldOptions
-
+	fieldOptions?:FieldOptions	
 }
 
 export class DynamicRangeFilter extends SearchkitComponent<DynamicRangeFilterProps, any> {
 	accessor:DynamicRangeAccessor
 
 	static propTypes = defaults({
-		field:React.PropTypes.string.isRequired,
-		title:React.PropTypes.string.isRequired,
-		id:React.PropTypes.string.isRequired,
+		field:PropTypes.string.isRequired,
+		title:PropTypes.string.isRequired,
+		id:PropTypes.string.isRequired,
 		containerComponent:RenderComponentPropType,
 		rangeComponent:RenderComponentPropType,
-		rangeFormatter:React.PropTypes.func,
-		fieldOptions:React.PropTypes.shape({
-			type:React.PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
-			options:React.PropTypes.object
+		rangeFormatter:PropTypes.func,
+		fieldOptions:PropTypes.shape({
+			type:PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
+			options:PropTypes.object
 		}),
 	}, SearchkitComponent.propTypes)
 
@@ -63,9 +58,12 @@ export class DynamicRangeFilter extends SearchkitComponent<DynamicRangeFilterPro
 	}
 
 	defineAccessor() {
-		const { id, title, field, fieldOptions } = this.props
+		const { 
+			id, title, field, fieldOptions, 
+			rangeFormatter, translations  } = this.props
 		return new DynamicRangeAccessor(id,{
-			id, title, field, fieldOptions
+			id, title, field, fieldOptions, 
+			rangeFormatter, translations
 		})
 	}
 

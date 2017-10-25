@@ -1,34 +1,37 @@
 import {ImmutableQuery} from "./query";
-import {Accessor, BaseQueryAccessor, AnonymousAccessor} from "./accessors"
+import { BaseQueryAccessor, AnonymousAccessor, PageSizeAccessor} from "./accessors"
 import {AccessorManager} from "./AccessorManager"
 import {ESTransport, AxiosESTransport, MockESTransport} from "./transport"
 import {SearchRequest} from "./SearchRequest"
-import {Utils, EventEmitter} from "./support"
+import {EventEmitter, GuidGenerator} from "./support"
 import {VERSION} from "./SearchkitVersion"
 import {createHistoryInstance, encodeObjUrl, decodeObjString} from "./history"
 
-import {defaults} from "lodash"
-import {constant} from "lodash"
-import {identity} from "lodash"
-import {map} from "lodash"
-import {isEqual} from "lodash"
-import {get} from "lodash"
-import qs from "qs"
+const defaults = require("lodash/defaults")
+const constant = require("lodash/constant")
+const identity = require("lodash/identity")
+const map = require("lodash/map")
+const isEqual = require("lodash/isEqual")
+const get = require("lodash/get")
 
-require('es6-promise').polyfill()
-
-import {after} from "lodash"
 
 export interface SearchkitOptions {
-  useHistory?:boolean,
-  createHistory?:Function,
-  getLocation?:Function,
-  searchOnLoad?:boolean,
-  httpHeaders?:Object,
-  basicAuth?:string,
-  transport?:ESTransport,
-  searchUrlPath?:string,
+  useHistory?:boolean
+  createHistory?:Function
+  getLocation?:Function
+  searchOnLoad?:boolean
+  httpHeaders?:Object
+  basicAuth?:string
+  transport?:ESTransport
+  searchUrlPath?:string
   timeout?: number
+  withCredentials? : boolean
+  defaultSize?:number
+}
+
+export interface InitialState {
+  results?:Object,
+  state?:Object
 }
 
 export class SearchkitManager {
@@ -39,6 +42,7 @@ export class SearchkitManager {
   translateFunction:Function
   currentSearchRequest:SearchRequest
   history
+  guidGenerator:GuidGenerator
   _unlistenHistory:Function
   options:SearchkitOptions
   transport:ESTransport
@@ -46,6 +50,7 @@ export class SearchkitManager {
   resultsEmitter:EventEmitter
   accessors:AccessorManager
   queryProcessor:Function
+  shouldPerformSearch:Function
   query:ImmutableQuery
   loading:boolean
   initialLoading:boolean
@@ -54,55 +59,51 @@ export class SearchkitManager {
   VERSION = VERSION
   static VERSION = VERSION
 
-  static mock() {
+  static mock(options = {}):SearchkitManager {
     let searchkit = new SearchkitManager("/", {
       useHistory:false,
-      transport:new MockESTransport()
-    })
+      transport:new MockESTransport(),      
+      ...options
+    })    
     searchkit.setupListeners()
     return searchkit
   }
 
-  constructor(host:string, options:SearchkitOptions = {}){
-    if (typeof window !== 'undefined') {
-      this.options = defaults(options, {
-        useHistory:true,
-        httpHeaders:{},
-        searchOnLoad:true,
-        createHistory:createHistoryInstance,
-        getLocation:()=> window.location
-      })
-    } else {
-      this.options = defaults(options, {
-        useHistory:false,
-        httpHeaders:{},
-        searchOnLoad:false,
-        //createHistory:createHistoryInstance,
-        //getLocation:()=> window.location
-      })
-    }
+  constructor(host:string, options:SearchkitOptions = {}, initialState:InitialState = {}){
+    this.options = defaults(options, {
+      useHistory:true,
+      httpHeaders:{},
+      searchOnLoad:true,
+      defaultSize:20,
+      createHistory:createHistoryInstance,
+      getLocation:()=> window.location
+    })
     this.host = host
-
+    this.guidGenerator = new GuidGenerator()
+    this.results = initialState.results
+    this.state = initialState.state || {}
     this.transport = this.options.transport || new AxiosESTransport(host, {
       headers:this.options.httpHeaders,
       basicAuth:this.options.basicAuth,
       searchUrlPath:this.options.searchUrlPath,
-      timeout: this.options.timeout
+      timeout: this.options.timeout,
+      withCredentials: this.options.withCredentials
     })
     this.accessors = new AccessorManager()
+    this.accessors.add(new PageSizeAccessor(this.options.defaultSize))
 		this.registrationCompleted = new Promise((resolve)=>{
 			this.completeRegistration = resolve
 		})
     this.translateFunction = constant(undefined)
     this.queryProcessor = identity
-    // this.primarySearcher = this.createSearcher()
+    this.shouldPerformSearch = ()=> true 
     this.query = new ImmutableQuery()
     this.emitter = new EventEmitter()
     this.resultsEmitter = new EventEmitter()
   }
 
   setupListeners() {
-    this.initialLoading = true
+    this.initialLoading = !this.results
     if(this.options.useHistory) {
       this.unlistenHistory()
       this.history = this.options.createHistory()
@@ -161,7 +162,7 @@ export class SearchkitManager {
 
   _searchWhenCompleted(location){
     this.registrationCompleted.then(()=> {
-      this.searchFromUrlQuery(decodeObjString(location.search.replace(/^\?/, "")))
+      this.searchFromUrlQuery(location.search)
     }).catch((e)=> {
       console.error(e.stack)
     })
@@ -174,15 +175,16 @@ export class SearchkitManager {
   }
 
   searchFromUrlQuery(query){
+    query = decodeObjString(query.replace(/^\?/, ""))
     this.accessors.setState(query)
-    this._search()
+    return this._search()
   }
 
   performSearch(replaceState=false, notifyState=true){
     if(notifyState && !isEqual(this.accessors.getState(), this.state)){
       this.accessors.notifyStateChange(this.state)
     }
-    this._search()
+    let searchPromise = this._search()
     if(this.options.useHistory){
       const historyMethod = (replaceState) ?
         this.history.replace : this.history.push
@@ -190,27 +192,37 @@ export class SearchkitManager {
       let url = this.options.getLocation().pathname + "?" + encodeObjUrl(this.state)
       historyMethod.call(this.history, url)
     }
+    return searchPromise
   }
 
   buildSearchUrl(extraParams = {}){
-    const params = defaults(extraParams, this.state || this.accessors.getState())    
+    const params = defaults(extraParams, this.state || this.accessors.getState())
     return this.options.getLocation().pathname + '?' + encodeObjUrl(params)
   }
 
   reloadSearch(){
     delete this.query
-    this.performSearch()
+    return this.performSearch()
   }
 
   search(replaceState=false){
-    this.performSearch(replaceState)
+    return this.performSearch(replaceState)
   }
 
+  getResultsAndState(){
+    return {
+      results: this.results,
+      state: this.state
+    }
+  }
   _search(){
     this.state = this.accessors.getState()
     let query = this.buildQuery()
-    if(this.query && isEqual(query.getJSON(), this.query.getJSON())) {
-      return
+    if(!this.shouldPerformSearch(query)){
+      return Promise.resolve(this.getResultsAndState())
+    }
+    if(this.results && this.query && isEqual(query.getJSON(), this.query.getJSON())) {
+      return Promise.resolve(this.getResultsAndState())
     }
     this.query = query
     this.loading = true
@@ -219,7 +231,10 @@ export class SearchkitManager {
     this.currentSearchRequest && this.currentSearchRequest.deactivate()
     this.currentSearchRequest = new SearchRequest(
       this.transport, queryObject, this)
-    this.currentSearchRequest.run()
+    return this.currentSearchRequest.run()
+      .then(()=> {
+        return this.getResultsAndState()
+      })
   }
 
   setResults(results){
@@ -239,6 +254,10 @@ export class SearchkitManager {
       results.hits.hasChanged = !(ids && ids === previousIds)
     }
 
+  }
+
+  guid(prefix){
+    return this.guidGenerator.guid(prefix)
   }
 
   getHits(){

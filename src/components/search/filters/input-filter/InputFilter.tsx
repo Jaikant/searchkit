@@ -1,10 +1,11 @@
 import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
   QueryAccessor,
   SearchkitComponent,
   SearchkitComponentProps,
-  ReactComponentType,
+  RenderComponentType,
   renderComponent
 } from "../../../../core";
 
@@ -14,7 +15,10 @@ import {
   Panel
 } from "../../../ui"
 
-import {defaults, throttle, assign, isUndefined} from 'lodash'
+const defaults = require("lodash/defaults")
+const throttle = require("lodash/throttle")
+const assign = require("lodash/assign")
+const isUndefined = require("lodash/isUndefined")
 
 export interface InputFilterProps extends SearchkitComponentProps {
   id: string
@@ -29,7 +33,7 @@ export interface InputFilterProps extends SearchkitComponentProps {
   prefixQueryOptions?:any
   placeholder?: string
   blurAction?:"search"|"restore"
-  containerComponent?: ReactComponentType<any>
+  containerComponent?: RenderComponentType<any>
 }
 
 export class InputFilter extends SearchkitComponent<InputFilterProps, any> {
@@ -38,7 +42,8 @@ export class InputFilter extends SearchkitComponent<InputFilterProps, any> {
   throttledSearch: () => void
 
   static translations:any = {
-    "searchbox.placeholder":"Search"
+    "searchbox.placeholder":"Search",
+    "searchbox.button":"search"
   }
   translations = SearchBox.translations
 
@@ -51,21 +56,21 @@ export class InputFilter extends SearchkitComponent<InputFilterProps, any> {
   }
 
   static propTypes = defaults({
-    id:React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    searchOnChange:React.PropTypes.bool,
-    searchThrottleTime:React.PropTypes.number,
-    queryBuilder:React.PropTypes.func,
-    queryFields:React.PropTypes.arrayOf(React.PropTypes.string),
-    queryOptions:React.PropTypes.object,
-    prefixQueryFields:React.PropTypes.arrayOf(React.PropTypes.string),
-    prefixQueryOptions:React.PropTypes.object,
+    id:PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    searchOnChange:PropTypes.bool,
+    searchThrottleTime:PropTypes.number,
+    queryBuilder:PropTypes.func,
+    queryFields:PropTypes.arrayOf(PropTypes.string),
+    queryOptions:PropTypes.object,
+    prefixQueryFields:PropTypes.arrayOf(PropTypes.string),
+    prefixQueryOptions:PropTypes.object,
     translations:SearchkitComponent.translationsPropType(
       SearchBox.translations
     ),
-    mod: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    blurAction: React.PropTypes.string
+    mod: PropTypes.string,
+    placeholder: PropTypes.string,
+    blurAction: PropTypes.string
   }, SearchkitComponent.propTypes)
 
   constructor (props:InputFilterProps) {
@@ -92,7 +97,7 @@ export class InputFilter extends SearchkitComponent<InputFilterProps, any> {
   defineAccessor(){
     const {
       id, title, prefixQueryFields, queryFields, queryBuilder,
-      searchOnChange, queryOptions, prefixQueryOptions } = this.props
+      queryOptions, prefixQueryOptions } = this.props
     return new QueryAccessor(id, {
       title,
       addToFilters: true,
@@ -192,7 +197,7 @@ export class InputFilter extends SearchkitComponent<InputFilterProps, any> {
             ref="queryField"
             autoFocus={false}
             onInput={this.onChange.bind(this)}/>
-          <input type="submit" value="search" className={block("action")} data-qa="submit"/>
+          <input type="submit" value={this.translate("searchbox.button")} className={block("action")} data-qa="submit"/>
           <div data-qa="remove"
                onClick={this.onClear}
                className={block("remove").state({hidden:value == ""})} />

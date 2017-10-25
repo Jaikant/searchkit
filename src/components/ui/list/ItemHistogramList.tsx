@@ -1,22 +1,19 @@
 import * as React from "react";
 
-import { AbstractItemList, ItemListProps } from "./ItemListComponents"
+import { AbstractItemList} from "./ItemListComponents"
 import {
   FastClick,
-  ReactComponentType,
-  PureRender
-} from "../../../"
+} from "../../../core/react/FastClick"
 
 import { ItemProps } from './ListProps'
 
-import {defaults} from 'lodash'
+const defaults = require("lodash/defaults")
 
 export interface ItemHistogramComponentProps extends ItemProps {
   showCheckbox: boolean
 }
 
-@PureRender
-export class ItemHistogramComponent extends React.Component<ItemHistogramComponentProps, {}> {
+export class ItemHistogramComponent extends React.PureComponent<ItemHistogramComponentProps, {}> {
 
   getCountRatio(){
     const { rawCount, listDocCount } = this.props
@@ -30,7 +27,7 @@ export class ItemHistogramComponent extends React.Component<ItemHistogramCompone
   render(){
     const {
       bemBlocks, onClick, active, disabled, style, itemKey,
-      label, count, showCount, showCheckbox, listDocCount } = this.props
+      label, count, showCount, showCheckbox } = this.props
     const block = bemBlocks.option
     const className = block()
       .state({ active, disabled, histogram: true })

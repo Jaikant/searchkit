@@ -1,17 +1,19 @@
-import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
-  ReactComponentType, SearchkitComponentProps,
-  SearchkitComponent, FacetAccessor,
+  SearchkitComponentProps,
+  FacetAccessor,
   RenderComponentPropType, RenderComponentType,
   FieldOptions
 } from "../../../../core"
+
+import { SearchkitComponent } from "../../../../core/react"
 
 import {
   ItemProps, ListProps
 } from "../../../"
 
-import {defaults} from "lodash"
+const defaults = require("lodash/defaults")
 export interface FacetFilterProps extends SearchkitComponentProps {
   field: string
   operator?: string
@@ -33,31 +35,31 @@ export interface FacetFilterProps extends SearchkitComponentProps {
 }
 
 export const FacetFilterPropTypes = defaults({
-  field: React.PropTypes.string.isRequired,
-  operator: React.PropTypes.oneOf(["AND", "OR"]),
-  size: React.PropTypes.number,
-  title: React.PropTypes.string.isRequired,
-  id: React.PropTypes.string.isRequired,
+  field: PropTypes.string.isRequired,
+  operator: PropTypes.oneOf(["AND", "OR"]),
+  size: PropTypes.number,
+  title: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   containerComponent:RenderComponentPropType,
   listComponent:RenderComponentPropType,
   itemComponent:RenderComponentPropType,
   translations: SearchkitComponent.translationsPropType(
     FacetAccessor.translations
   ),
-  orderKey: React.PropTypes.string,
-  orderDirection: React.PropTypes.oneOf(["asc", "desc"]),
-  include: React.PropTypes.oneOfType([
-      React.PropTypes.string, React.PropTypes.array
+  orderKey: PropTypes.string,
+  orderDirection: PropTypes.oneOf(["asc", "desc"]),
+  include: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.array
   ]),
-  exclude: React.PropTypes.oneOfType([
-      React.PropTypes.string, React.PropTypes.array
+  exclude: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.array
   ]),
-  showCount: React.PropTypes.bool,
-  showMore: React.PropTypes.bool,
-  fieldOptions:React.PropTypes.shape({
-    type:React.PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
-    options:React.PropTypes.object
+  showCount: PropTypes.bool,
+  showMore: PropTypes.bool,
+  fieldOptions:PropTypes.shape({
+    type:PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
+    options:PropTypes.object
   }),
-  countFormatter:React.PropTypes.func,
-  bucketsTransform:React.PropTypes.func
+  countFormatter:PropTypes.func,
+  bucketsTransform:PropTypes.func
 },SearchkitComponent.propTypes)

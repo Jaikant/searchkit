@@ -1,19 +1,19 @@
-import {State, ArrayState} from "../state"
+import {ArrayState} from "../state"
 import {FilterBasedAccessor} from "./FilterBasedAccessor"
 import {Utils} from "../support"
 import {
-  RangeQuery, BoolShould, CardinalityMetric,
+  RangeQuery, BoolShould,
   RangeBucket, FilterBucket, SelectedFilter,
   FieldOptions, FieldContext, FieldContextFactory
 } from "../";
 
-import {find} from "lodash"
-import {compact} from "lodash"
-import {map} from "lodash"
-import {filter} from "lodash"
-import {omitBy} from "lodash"
-import {isUndefined} from "lodash"
-import {includes} from "lodash"
+const find = require("lodash/find")
+const compact = require("lodash/compact")
+const map = require("lodash/map")
+const filter = require("lodash/filter")
+const omitBy = require("lodash/omitBy")
+const isUndefined = require("lodash/isUndefined")
+const includes = require("lodash/includes")
 
 export interface RangeOption {
   title:string, from?:number, to?:number, key?:string

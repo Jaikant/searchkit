@@ -1,10 +1,10 @@
-import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
   SearchkitComponent,
   SearchkitComponentProps,
   CheckboxFilterAccessor,
-  ReactComponentType,
+  RenderComponentType,
   renderComponent
 } from "../../../../core";
 
@@ -12,16 +12,15 @@ import {
   Panel, CheckboxItemList
 } from "../../../ui"
 
-import {defaults} from 'lodash'
-import {map} from 'lodash'
+const defaults = require("lodash/defaults")
 
 export interface CheckboxFilterProps extends SearchkitComponentProps {
   id: string
   filter: any
   title: string
   label: string
-  containerComponent?: ReactComponentType<any>
-  listComponent?: ReactComponentType<any>
+  containerComponent?: RenderComponentType<any>
+  listComponent?: RenderComponentType<any>
   showCount?: boolean
 }
 
@@ -29,14 +28,14 @@ export class CheckboxFilter extends SearchkitComponent<CheckboxFilterProps, any>
   accessor: CheckboxFilterAccessor
 
   static propTypes = defaults({
-    id: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    label: React.PropTypes.string.isRequired,
-    filter: React.PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    filter: PropTypes.object.isRequired,
     translations: SearchkitComponent.translationsPropType(
         CheckboxFilterAccessor.translations
     ),
-    showCount: React.PropTypes.bool,
+    showCount: PropTypes.bool,
   }, SearchkitComponent.propTypes)
 
   static defaultProps = {
@@ -58,7 +57,7 @@ export class CheckboxFilter extends SearchkitComponent<CheckboxFilterProps, any>
     })
   }
 
-  toggleFilter(key) {
+  toggleFilter() {
     this.accessor.state = this.accessor.state.create(!this.accessor.state.getValue())
     this.searchkit.performSearch()
   }

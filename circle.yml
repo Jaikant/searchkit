@@ -8,14 +8,41 @@ machine:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
   node:
-    version: 6.9.1
+    version: 8.6.0
+
+general:
+  artifacts:
+    - coverage
+    - cypress/video
+    - cypress/screenshots
+    - lib
+    - release
 
 dependencies:
-  override:
-    - yarn
-  cache_directories:
-    - ~/.cache/yarn
+  pre: 
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+
+deployment:
+  beta:
+    tag: /^v\d+\.\d+\.\d+\-\d+$/
+    commands:
+      - npm publish --tag beta
+  # beta:
+  #   tag: /^v\d+\.\d+\.\d+\+$/
+  #   commands:
+  #     - npm publish
+  #     - gitbook stuff
+
 
 test:
-  pre:
-    - npm install -g karma-cli
+  override:
+    - npm run test:ci
+    - npm run cypress:ci
+  post:
+    - cat ./coverage/lcov.info | coveralls
+    - cp e2e-results.xml $CIRCLE_TEST_REPORTS/cypress
+    - cp unit-results.xml $CIRCLE_TEST_REPORTS/jest
+  pre:    
+    - mkdir -p $CIRCLE_TEST_REPORTS/{jest,cypress}
+    - npm run build
+    - npm run build:e2e    

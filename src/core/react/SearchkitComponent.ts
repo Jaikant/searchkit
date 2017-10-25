@@ -1,12 +1,11 @@
 import * as React from "react"
+import * as PropTypes from "prop-types"
 import {SearchkitManager} from "../SearchkitManager"
 import {ImmutableQuery} from "../query"
 import {Accessor} from "../accessors/Accessor"
 import {Utils} from "../support"
-let block = require("bem-cn")
-import {keys} from "lodash"
-import {without} from "lodash"
-import {mapValues} from "lodash"
+const mapValues = require("lodash/mapValues")
+import {block} from "./block"
 
 export interface SearchkitComponentProps {
   mod?:string
@@ -24,19 +23,19 @@ export class SearchkitComponent<P extends SearchkitComponentProps,S> extends Rea
   unmounted = false
 
   static contextTypes: React.ValidationMap<any> = {
-		searchkit:React.PropTypes.instanceOf(SearchkitManager)
+		searchkit:PropTypes.instanceOf(SearchkitManager)
 	}
 
   static translationsPropType = (translations)=> {
-    return React.PropTypes.objectOf(React.PropTypes.string)
+    return PropTypes.shape(mapValues(translations, ()=> PropTypes.string))
   }
 
   static propTypes:any = {
-    mod :React.PropTypes.string,
-    className :React.PropTypes.string,
-    translations: React.PropTypes.objectOf(
-      React.PropTypes.string),
-    searchkit:React.PropTypes.instanceOf(SearchkitManager)
+    mod :PropTypes.string,
+    className :PropTypes.string,
+    translations: PropTypes.objectOf(
+      PropTypes.string),
+    searchkit:PropTypes.instanceOf(SearchkitManager)
   }
 
   constructor(props?){
@@ -62,7 +61,7 @@ export class SearchkitComponent<P extends SearchkitComponentProps,S> extends Rea
 
   get bemBlocks(): any {
     return mapValues(this.defineBEMBlocks(), (cssClass) => {
-      return block(cssClass)
+      return block(cssClass).el
     })
   }
   _getSearchkit(){

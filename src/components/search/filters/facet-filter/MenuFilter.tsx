@@ -1,27 +1,25 @@
-import * as React from "react";
-
 import { ItemList, Panel, CheckboxItemList } from '../../../ui'
 import { FacetFilter} from "./FacetFilter"
 
-import {defaults} from "lodash"
-import {map} from "lodash"
-import {concat} from "lodash"
-import {isUndefined} from "lodash"
+const defaults = require("lodash/defaults")
+const concat = require("lodash/concat")
+const isUndefined = require("lodash/isUndefined")
 
-import {FacetFilterProps, FacetFilterPropTypes} from "./FacetFilterProps"
+import { FacetFilterPropTypes} from "./FacetFilterProps"
+
+export {Panel, CheckboxItemList}
 
 const allItem = {
   key:"$all", label: "All"
 }
-
-export class MenuFilter extends FacetFilter<FacetFilterProps> {
+export class MenuFilter extends FacetFilter {
 
   static propTypes = defaults({
-  },FacetFilterPropTypes.propTypes)
+  }, FacetFilterPropTypes.propTypes)
 
   static defaultProps = defaults({
     listComponent: ItemList,
-    operator:"OR"
+    operator: "OR"
   }, FacetFilter.defaultProps)
 
   toggleFilter(option) {
@@ -48,8 +46,7 @@ export class MenuFilter extends FacetFilter<FacetFilterProps> {
       label: allItem.label,
       doc_count: this.accessor.getDocCount()
     }
-    return concat([all], this.accessor.getBuckets())
+    return concat([all], super.getItems())
   }
-
 
 }

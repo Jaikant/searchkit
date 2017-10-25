@@ -15,7 +15,7 @@ import * as React from "react";
 const searchkit = new SearchkitManager(host, {searchOnLoad:true})
 import {MockList} from "./MockList"
 import {MockRange} from "./MockRange"
-import * as _ from "lodash"
+
 
 require("./customisations.scss")
 require("../../../../../theming/theme.scss")
@@ -23,7 +23,7 @@ require("../../../../../theming/theme.scss")
 const MovieHitsGridItem = (props)=> {
   const {bemBlocks, result} = props
   let url = "http://www.imdb.com/title/" + result._source.imdbId
-  const source:any = _.extend({}, result._source, result.highlight)
+  const source:any = Object.assign({}, result._source, result.highlight)
   return (
     <div className={bemBlocks.item().mix(bemBlocks.container("item"))} data-qa="hit">
       <a href={url} target="_blank">
@@ -49,7 +49,6 @@ const filterGroupProps = {
     return key + "!"
   }
 }
-
 
 class App extends React.Component<any, any> {
   render(){
@@ -92,7 +91,7 @@ class App extends React.Component<any, any> {
               <MockRange title="Container Component" containerComponent={Panel}/>
               <MockRange title="Container Element" containerComponent={<Panel />}/>
               <MockRange title="Container Element with props" containerComponent={<Panel collapsable={true}/>}/>
-              <MockRange title="Container Function" containerComponent={(props, children) => <Panel {...props} collapsable={true}>{children}</Panel>}/>
+              <MockRange title="Container Function" containerComponent={props => <Panel {...props } collapsable={true}></Panel >}/>
               <hr />
               <MockRange title="RangeSlider" rangeComponent={RangeSlider}/>
               <MockRange title="RangeHistogram" rangeComponent={RangeHistogram}/>

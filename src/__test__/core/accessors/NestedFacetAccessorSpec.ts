@@ -1,8 +1,8 @@
 import {
-  FacetAccessor, ImmutableQuery,
-  BoolMust, BoolShould, ArrayState, NestedFacetAccessor,
+  ImmutableQuery,SearchkitManager,
+  BoolMust, BoolShould, NestedFacetAccessor,
   NestedQuery, TermQuery, FilterBucket, NestedBucket, MinMetric,
-  TermsBucket
+  TermsBucket, DefaultNumberBuckets
 } from "../../../"
 
 import * as _ from "lodash"
@@ -18,7 +18,7 @@ describe("NestedFacetAccessor", ()=> {
       orderDirection:"desc"
     }
     this.accessor = new NestedFacetAccessor("categories", this.options)
-    this.accessor.uuid = "999"
+    this.accessor.setSearchkitManager(SearchkitManager.mock())
     this.query = new ImmutableQuery()
     this.toPlainObject = (ob)=> {
       return JSON.parse(JSON.stringify(ob))
@@ -33,22 +33,28 @@ describe("NestedFacetAccessor", ()=> {
           "children": {
             "lvl1":{
               children:{
-                buckets: [1,2,3]
+                buckets: [
+                  { key: 1 }, { key: 2, }, { key: 3 }
+                ]
               }
             },
             "lvl2":{
               children: {
-                buckets: [4,5,6]
+                buckets: [
+                  { key: 4 }, { key: 5, }, { key: 6 }
+                ]                
               }
             }
           }
         }
       }
     }
-    expect(this.accessor.getBuckets(1))
-      .toEqual([1,2,3])
-    expect(this.accessor.getBuckets(2))
-      .toEqual([4,5,6])
+    expect(this.accessor.getBuckets(1)).toEqual([
+      { key: "1" }, { key: "2" }, { key: "3" }
+    ])
+    expect(this.accessor.getBuckets(2)).toEqual([
+      { key: "4" }, { key: "5" }, { key: "6" }
+    ])
     expect(this.accessor.getBuckets(4))
       .toEqual([])
   })
@@ -59,7 +65,7 @@ describe("NestedFacetAccessor", ()=> {
       TermsBucket(
         "children",
         "taxonomy.value",
-        {size:0, order:{taxonomy_order:"desc"}},
+        {size:DefaultNumberBuckets, order:{taxonomy_order:"desc"}},
         MinMetric("taxonomy_order", "taxonomy.order")
       )
     )
@@ -69,7 +75,7 @@ describe("NestedFacetAccessor", ()=> {
     expect(this.accessor.getTermAggs()).toEqual(
       TermsBucket(
         "children", "taxonomy.value",
-        {size:0, order:{"_count":"asc"}}
+        {size:DefaultNumberBuckets, order:{"_count":"asc"}}
       )
     )
 
@@ -79,7 +85,7 @@ describe("NestedFacetAccessor", ()=> {
     expect(this.accessor.getTermAggs()).toEqual(
       TermsBucket(
         "children", "taxonomy.value",
-        {size:0, order:undefined}
+        {size:DefaultNumberBuckets, order:undefined}
       )
     )
 
@@ -124,11 +130,11 @@ describe("NestedFacetAccessor", ()=> {
     this.query = this.query.addFilter("other", BoolShould(["foo"]))
     let query = this.accessor.buildSharedQuery(this.query)
     query = this.accessor.buildOwnQuery(query)
-    expect(_.keys(query.index.filtersMap).sort()).toEqual(['999', 'other'])
+    expect(_.keys(query.index.filtersMap).sort()).toEqual(['categories1', 'other'])
     let termsBucket = TermsBucket(
       "children",
       "taxonomy.value",
-      {size:0, order:{taxonomy_order:"desc"}},
+      {size:DefaultNumberBuckets, order:{taxonomy_order:"desc"}},
       MinMetric("taxonomy_order", "taxonomy.order")
     )
     let expected = FilterBucket(

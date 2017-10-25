@@ -1,8 +1,8 @@
 import {ImmutableQuery} from "../query/ImmutableQuery";
 import {SearchkitManager} from "../SearchkitManager";
 import {Utils} from "../support"
-import {get} from "lodash"
-import {compact} from "lodash"
+const get = require("lodash/get")
+const compact = require("lodash/compact")
 
 export class Accessor {
   searchkit:SearchkitManager
@@ -12,7 +12,6 @@ export class Accessor {
   translations:Object
   refCount:number
   constructor(){
-    this.uuid = Utils.guid()
     this.active = true
     this.translations = {}
     this.refCount = 0
@@ -33,6 +32,8 @@ export class Accessor {
 
   setSearchkitManager(searchkit){
     this.searchkit = searchkit
+    this.uuid = searchkit.guid()
+    this.results = this.searchkit.results    
   }
 
 

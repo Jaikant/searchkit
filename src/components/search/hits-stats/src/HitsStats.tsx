@@ -1,15 +1,15 @@
 import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
 	SearchkitComponent,
 	SearchkitComponentProps,
-	ReactComponentType,
+	RenderComponentType,
   renderComponent
 } from "../../../../core"
 
-import {defaults} from "lodash"
-import {get} from "lodash"
-import {identity} from "lodash"
+const defaults = require("lodash/defaults")
+const identity = require("lodash/identity")
 
 export interface HitsStatsDisplayProps {
 	bemBlocks:{container: Function}
@@ -32,7 +32,7 @@ const HitsStatsDisplay = (props:HitsStatsDisplayProps) => {
 
 
 export interface HitsStatsProps extends SearchkitComponentProps {
-	component?: ReactComponentType<HitsStatsDisplayProps>
+	component?: RenderComponentType<HitsStatsDisplayProps>
 	countFormatter?:(count:number)=> number | string
 }
 
@@ -47,7 +47,7 @@ export class HitsStats extends SearchkitComponent<HitsStatsProps, any> {
 		translations:SearchkitComponent.translationsPropType(
 			HitsStats.translations
 		),
-		countFormatter:React.PropTypes.func
+		countFormatter:PropTypes.func
 	}, SearchkitComponent.propTypes)
 
 	static defaultProps = {

@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
 	SearchkitComponent,
 	SearchkitComponentProps,
@@ -8,10 +7,9 @@ import {
 	renderComponent
 } from "../../../core"
 
-import {Hits} from "../../../"
 import {Toggle, ListProps} from "../../ui"
 
-import {defaults} from "lodash"
+const defaults = require("lodash/defaults")
 
 
 export interface ViewSwitcherProps extends SearchkitComponentProps {
@@ -47,9 +45,8 @@ export class ViewSwitcherToggle extends SearchkitComponent<ViewSwitcherProps, an
 				disabled:!this.hasHits(),
 				items:options,
 				selectedItems:[selectedOption],
-				toggleItem:this.setView.bind(this),
+				toggleItem:this.setView.bind(this),	
 				setItems: ([item]) => this.setView(item),
-				urlBuilder: (item) => this.getViewOptionsSwitcherAccessor().urlWithState(item.key),
 				translate:this.translate
 			})
     }

@@ -1,18 +1,18 @@
 import {Accessor, StatefulAccessor, BaseQueryAccessor, noopQueryAccessor} from  "./accessors"
 import {Utils} from "./support"
 import {ImmutableQuery} from "./query"
-import {filter} from "lodash"
-import {values} from "lodash"
-import {reduce} from "lodash"
-import {assign} from "lodash"
-import {each} from "lodash"
-import {without} from "lodash"
-import {find} from "lodash"
+const filter = require("lodash/filter")
+const values = require("lodash/values")
+const reduce = require("lodash/reduce")
+const assign = require("lodash/assign")
+const each = require("lodash/each")
+const without = require("lodash/without")
+const find = require("lodash/find")
 
 type StatefulAccessors = Array<StatefulAccessor<any>>
 
 export class AccessorManager {
-
+  
   accessors:Array<Accessor>
   statefulAccessors:{}
   queryAccessor:BaseQueryAccessor
@@ -50,8 +50,13 @@ export class AccessorManager {
       }
       let existingAccessor = this.statefulAccessors[accessor.key]
       if(existingAccessor){
-        existingAccessor.incrementRef()
-        return existingAccessor
+        if(existingAccessor.constructor === accessor.constructor){
+          existingAccessor.incrementRef()
+          return existingAccessor
+        } else {
+          throw new Error(`Multiple imcompatible components with id='${accessor.key}' existing on the page`)          
+        }
+        
       } else {
         this.statefulAccessors[accessor.key] = accessor
       }

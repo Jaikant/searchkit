@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
   QueryAccessor,
@@ -6,10 +7,10 @@ import {
   SearchkitComponentProps
 } from "../../../core"
 
-import {defaults} from "lodash"
-import {throttle} from "lodash"
-import {assign} from "lodash"
-import {isUndefined} from "lodash"
+const defaults = require("lodash/defaults")
+const throttle = require("lodash/throttle")
+const assign = require("lodash/assign")
+const isUndefined = require("lodash/isUndefined")
 
 export interface SearchBoxProps extends SearchkitComponentProps {
   searchOnChange?:boolean
@@ -32,7 +33,8 @@ export class SearchBox extends SearchkitComponent<SearchBoxProps, any> {
   throttledSearch: () => void
 
   static translations:any = {
-    "searchbox.placeholder":"Search"
+    "searchbox.placeholder":"Search",
+    "searchbox.button":"search"
   }
   translations = SearchBox.translations
 
@@ -44,21 +46,21 @@ export class SearchBox extends SearchkitComponent<SearchBoxProps, any> {
   }
 
   static propTypes = defaults({
-    id:React.PropTypes.string,
-    searchOnChange:React.PropTypes.bool,
-    searchThrottleTime:React.PropTypes.number,
-    queryBuilder:React.PropTypes.func,
-    queryFields:React.PropTypes.arrayOf(React.PropTypes.string),
-    autofocus:React.PropTypes.bool,
-    queryOptions:React.PropTypes.object,
-    prefixQueryFields:React.PropTypes.arrayOf(React.PropTypes.string),
-    prefixQueryOptions:React.PropTypes.object,
+    id:PropTypes.string,
+    searchOnChange:PropTypes.bool,
+    searchThrottleTime:PropTypes.number,
+    queryBuilder:PropTypes.func,
+    queryFields:PropTypes.arrayOf(PropTypes.string),
+    autofocus:PropTypes.bool,
+    queryOptions:PropTypes.object,
+    prefixQueryFields:PropTypes.arrayOf(PropTypes.string),
+    prefixQueryOptions:PropTypes.object,
     translations:SearchkitComponent.translationsPropType(
       SearchBox.translations
     ),
-    mod: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    blurAction: React.PropTypes.string
+    mod: PropTypes.string,
+    placeholder: PropTypes.string,
+    blurAction: PropTypes.string
   }, SearchkitComponent.propTypes)
 
   constructor (props:SearchBoxProps) {
@@ -81,7 +83,7 @@ export class SearchBox extends SearchkitComponent<SearchBoxProps, any> {
   defineAccessor(){
     const {
       id, prefixQueryFields, queryFields, queryBuilder,
-      searchOnChange, queryOptions, prefixQueryOptions
+      queryOptions, prefixQueryOptions
     } = this.props
     return new QueryAccessor(id, {
       prefixQueryFields,
@@ -169,7 +171,7 @@ export class SearchBox extends SearchkitComponent<SearchBoxProps, any> {
           ref="queryField"
           autoFocus={this.props.autofocus}
           onInput={this.onChange.bind(this)}/>
-          <input type="submit" value="search" className={block("action")} data-qa="submit"/>
+          <input type="submit" value={this.translate("searchbox.button")} className={block("action")} data-qa="submit"/>
           <div data-qa="loader" className={block("loader").mix("sk-spinning-loader").state({hidden:!this.isLoading()})}></div>
         </form>
       </div>

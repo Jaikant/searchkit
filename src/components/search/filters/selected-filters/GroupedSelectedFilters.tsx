@@ -3,27 +3,26 @@ import * as React from "react";
 import {
   SearchkitComponent,
   SearchkitComponentProps,
-  ReactComponentType,
-  PureRender,
-  renderComponent
+  RenderComponentType,
+  renderComponent,
+  SelectedFilter
 } from "../../../../core"
 
 import {
 	FilterGroup
 } from "../../../ui"
 
-let bemBlock = require("bem-cn")
 
-import {defaults} from 'lodash'
-import {groupBy} from 'lodash'
-import {size} from 'lodash'
-import {toArray} from 'lodash'
-import {forEach} from 'lodash'
-import {map} from 'lodash'
+const defaults = require("lodash/defaults")
+const groupBy = require("lodash/groupBy")
+const size = require("lodash/size")
+const toArray = require("lodash/toArray")
+const forEach = require("lodash/forEach")
+const map = require("lodash/map")
 
 
 export interface GroupedSelectedFiltersProps extends SearchkitComponentProps {
-  groupComponent?: ReactComponentType<any>
+  groupComponent?: RenderComponentType<any>
 }
 
 export class GroupedSelectedFilters extends SearchkitComponent<GroupedSelectedFiltersProps, any> {
@@ -52,13 +51,12 @@ export class GroupedSelectedFilters extends SearchkitComponent<GroupedSelectedFi
     }
   }
 
-  getFilters(): Array<any> {
+  getFilters() {
     return this.getQuery().getSelectedFilters()
   }
 
   getGroupedFilters(): Array<any> {
     const filters = this.getFilters();
-    const groupedFilters = []
     return toArray(groupBy(filters, 'id'))
   }
 
@@ -71,7 +69,7 @@ export class GroupedSelectedFilters extends SearchkitComponent<GroupedSelectedFi
     this.searchkit.performSearch()
   }
 
-  removeFilters(filters) {
+  removeFilters(filters:Array<SelectedFilter>) {
     forEach(filters, filter => filter.remove())
     this.searchkit.performSearch()
   }

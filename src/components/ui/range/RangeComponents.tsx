@@ -1,17 +1,15 @@
 import * as React from 'react'
+import * as PropTypes from "prop-types"
 
 import {
   RangeHistogram, RangeSlider, RangeInput
 } from './'
-import { PureRender } from "../../../core"
-import {defaults} from "lodash"
 
-@PureRender
-export class RangeComponent extends React.Component<any, {}> {
+export class RangeComponent extends React.PureComponent<any, {}> {
   static propTypes = {
-    showHistogram:React.PropTypes.bool,
-    showSlider:React.PropTypes.bool,
-    showInput:React.PropTypes.bool
+    showHistogram:PropTypes.bool,
+    showSlider:PropTypes.bool,
+    showInput:PropTypes.bool
   }
 
   render() {

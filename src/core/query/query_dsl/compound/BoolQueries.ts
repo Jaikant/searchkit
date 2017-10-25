@@ -1,9 +1,9 @@
-import {isArray} from "lodash"
-import {findIndex} from "lodash"
-import {forEach} from "lodash"
-import {isEmpty} from "lodash"
-import {filter} from "lodash"
-import {keys} from "lodash"
+const isArray = require("lodash/isArray")
+const findIndex = require("lodash/findIndex")
+const forEach = require("lodash/forEach")
+const isEmpty = require("lodash/isEmpty")
+const filter = require("lodash/filter")
+const keys = require("lodash/keys")
 
 function isBoolOp(operator, val) {
   // Has {bool: must: []} ?
@@ -13,12 +13,12 @@ function isBoolOp(operator, val) {
   return (keys(val).length == 1) && (keys(val.bool).length == 1)
 }
 
-function flattenBool(operator, arr) {
+function flattenBool(operator, arr:Array<any>) {
   // Flatten bool.must
   var newArr = []
   forEach(arr, node => {
     if (isBoolOp(operator, node)) {
-      newArr.push(...node.bool[operator])
+      newArr = newArr.concat(node.bool[operator])
     } else {
       newArr.push(node)
     }

@@ -1,7 +1,6 @@
-import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import {
-	SearchkitManager,
 	SearchkitComponent,
 	NumericOptionsAccessor,
 	SearchkitComponentProps,
@@ -16,8 +15,8 @@ import {
 	ListProps, ItemProps, ItemList, Panel
 } from "../../../../ui"
 
-import {defaults} from "lodash"
-import {map} from "lodash"
+const defaults = require("lodash/defaults")
+const map = require("lodash/map")
 
 export interface NumericRefinementListFilterProps extends SearchkitComponentProps {
   field:string
@@ -40,24 +39,24 @@ export class NumericRefinementListFilter extends SearchkitComponent<NumericRefin
     containerComponent: RenderComponentPropType,
     listComponent: RenderComponentPropType,
     itemComponent: RenderComponentPropType,
-    field:React.PropTypes.string.isRequired,
-    title:React.PropTypes.string.isRequired,
-    id:React.PropTypes.string.isRequired,
-    multiselect: React.PropTypes.bool,
-    showCount: React.PropTypes.bool,
-    options:React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        title:React.PropTypes.string.isRequired,
-        from:React.PropTypes.number,
-        to:React.PropTypes.number,
-        key:React.PropTypes.string
+    field:PropTypes.string.isRequired,
+    title:PropTypes.string.isRequired,
+    id:PropTypes.string.isRequired,
+    multiselect: PropTypes.bool,
+    showCount: PropTypes.bool,
+    options:PropTypes.arrayOf(
+      PropTypes.shape({
+        title:PropTypes.string.isRequired,
+        from:PropTypes.number,
+        to:PropTypes.number,
+        key:PropTypes.string
       })
     ),
-		fieldOptions:React.PropTypes.shape({
-	    type:React.PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
-	    options:React.PropTypes.object
+		fieldOptions:PropTypes.shape({
+	    type:PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
+	    options:PropTypes.object
 	  }),
-		countFormatter:React.PropTypes.func
+		countFormatter:PropTypes.func
   }, SearchkitComponent.propTypes)
 
   static defaultProps = {

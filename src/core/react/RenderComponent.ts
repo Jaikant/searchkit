@@ -1,22 +1,21 @@
 import * as React from 'react'
+import * as PropTypes from "prop-types"
 
-import {PureRender} from "./pure-render"
-import {omitBy} from 'lodash'
-import {isUndefined} from 'lodash'
-import {defaults} from 'lodash'
+const omitBy = require("lodash/omitBy")
+const isUndefined = require("lodash/isUndefined")
 
 export type RenderFunction = (props?:any, children?:any) => Element
 export type Element = React.ReactElement<any>
 export type RenderComponentType<P> = React.ComponentClass<P> | React.ClassicComponentClass<P> | Element | RenderFunction;
 
-export const RenderComponentPropType = React.PropTypes.oneOfType([
-  function(props:any, propName: string, componentName: string) {
+export const RenderComponentPropType = PropTypes.oneOfType([
+  function(props:any, propName: string) {
      if(isUndefined(props[propName]) || (props[propName]["prototype"] instanceof React.Component)) {
        return null
      }
   },
-  React.PropTypes.element,
-  React.PropTypes.func,
+  PropTypes.element,
+  PropTypes.func,
 ])
 
 export function renderComponent(component:RenderComponentType<any>, props={}, children=null){

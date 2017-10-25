@@ -24,6 +24,8 @@ const searchkit = new SearchkitManager(host, {
 
 * **basicAuth** - A string containing "key:val" for authenticating on each request, useful if using cloud providers such as [searchly.com](http://searchly.com)
 
+* **withCredentials** - A boolean to pass to Axios to indicate whether or not cross-site Access-Control requests should be made using credentials
+
 * **searchOnLoad** - A boolean to search on load, defaults to `true`
 
 * **useHistory** - A boolean to enable url history support, defaults to `true`
@@ -33,11 +35,14 @@ const searchkit = new SearchkitManager(host, {
 * **getLocation** - A function which returns the current location which has to implement the LocationInterface {pathname:String,search:String}, defaults to `()=> window.location`
 
 * **searchUrlPath** - A the search endpoint name, defaults to `/_search`. Used if your server proxy endpoint needs a different url convention.
-## Default Queries
-Sometimes we need to apply a default query which affects the entire search and is not serialized to the browser url.
 
 * **timeout** - A number value to override the default 5000ms response timeout. Optional.
 
+* **defaultSize** - Default size for elastic results, defaults to `20`
+
+## Default Queries
+
+Sometimes we need to apply a default query which affects the entire search and is not serialized to the browser url.
 
 `SearchkitManager` allows ability to add these
 
@@ -85,4 +90,14 @@ let removalFn = searchkit.addResultsListener((results)=>{
 })
 
 //removalFn() if you want to stop listening
+```
+
+## shouldPerformSearch
+If you want to control whether Searchkit performs a search, you can provide a custom check function
+The `shouldPerformSearch` function is called with an instance of `ImmutableQuery`
+```typescript
+  //only search when there is a query string
+  this.searchkit.shouldPerformSearch = (query)=> {
+    return !!query.getQueryString()
+  }
 ```
