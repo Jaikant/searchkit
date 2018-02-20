@@ -2,8 +2,6 @@ node_modules
 test/e2e/generated
 npm-debug.log
 lib/__test__
-lib/components
-lib/core
 lib/src
 lib/test
 lib/theming
